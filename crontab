@@ -1,0 +1,28 @@
+to find the crontab of another user
+
+ sudo cat /var/spool/cron/<name of user>
+ sudo cat /var/spool/cron/postgres
+ 
+ 
+ 
+ Time must be devisiable by half hour increments or not go over 30 minutes. Every 45 minutes will not work as a default option you will need a script to work that out. 
+ [oracle@ORA01test ~]$ crontab -l
+##example of job definition:
+# +----------------------- Minute (0 - 59)
+# |  +-------------------- Hour   (0 - 23)
+# |  |  +----------------- Day of month (1 - 31)
+# |  |  |  +-------------- Month (0 - 12) or jan,feb ...
+# |  |  |  |  +----------- Day of week (0 - 6) (Sunday=0)
+# |  |  |  |  |
+# *  *  *  *  *  /command to be executed
+########################################
+*/30   *  *  *  *  /scripts/FRA_CHECK.sh                > /logs/FRA_CHECK.log            2>&1
+*/15   *  *  *  *  /scripts/ADRCI_ALERTLOG_CHECK.sh     > /logs/ADRCI_ALERTLOG_CHK.log   2>&1
+05   */3  *  *  *  /scripts/LOG_CLEANUP.sh              > /logs/LOG_CLEANUP.log          2>&1
+*/20   *  *  *  *  /scripts/DG_SYNC_CHECK.sh            > /logs/DG_SYNC_CHECK.log        2>&1
+*/12   *  *  *  *  /scripts/DB_WAIT_CHECK.sh            > /logs/DB_WAIT_CHECK.log        2>&1
+*     03  *  *  *  /scripts/RSYNC_SCRIPT.sh             > /logs/RSYNC_SCRIPT.log         2>&1
+*     06  *  *  *  /scripts/crontab_check.sh                                             2>&1
+0    */2  *  *  *  /scripts/FRA_ENC_script.sh           > /logs/FRA_ENC_script.sh        2>&1
+10     2  1  *  *  /scripts/report.sh   >  /dev/null                                     2>&1
+18     2,6,10,14,18,22 * * * /scripts/chk_stdby_arch_stat.sh > /dev/null                 2>&1
